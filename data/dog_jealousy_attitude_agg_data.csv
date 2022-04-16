@@ -1,0 +1,205 @@
+"","subject","Breed","Sex","Condition","human","treatment","phase","attitude","age","z.age"
+"1","Aeden","Border  Collie","male","SM","Stranger","M","Introduction","Neutral",138,1.73271975253998
+"2","Akin","Rhodesian Ridgeback","male","CM","Caregiver","M","Introduction","Neutral",126,1.39798980034476
+"3","Akina","Akita Inu","female","SM","Stranger","M","Introduction","Offensive",133,1.5932489391253
+"4","Ame","Akita Inu","male","CP","Caregiver","P","Introduction","Neutral",42,-0.945119865021807
+"5","Amie","German Shepherd-Mix","female","CP","Caregiver","P","Introduction","Insecure",18,-1.61457976941225
+"6","Amy8","Border Collie","female","CM","Caregiver","M","Introduction","Neutral",114,1.06325984814953
+"7","Anouk3","Labrador Retriever","female","SP","Stranger","P","Introduction","Insecure",41,-0.973014027704742
+"8","Apryl","Border Collie","female","CM","Caregiver","M","Introduction","IO",127,1.42588396302769
+"9","Arielle","Border Collie","female","SP","Stranger","P","Introduction","IO",53,-0.638284075509519
+"10","Arkani2","Belgian Tervuren","male","CM","Caregiver","M","Introduction","Neutral",64,-0.331448285997231
+"11","Bailey2","Staffordshire Bull Terrier","female","SP","Stranger","P","Introduction","IO",65,-0.303554123314295
+"12","Balian","Border Collie","male","SP","Stranger","P","Introduction","Neutral",115,1.09115401083247
+"13","Barbarix2","Bearded Collie","male","CM","Caregiver","M","Introduction","Neutral",78,0.0590699915638631
+"14","Baerbel","Dackel-Terrier-Mix","female","SM","Stranger","M","Introduction","IO",60,-0.443024936728972
+"15","Batman","Jack Russel Terrier","male","SP","Stranger","P","Introduction","Friendly",142,1.84429640327172
+"16","Bella5","Kangal","female","SM","Stranger","M","Introduction","Friendly",86,0.282223293027345
+"17","Blacky","Mix","male","CM","Caregiver","M","Introduction","IO",99,0.644847407905504
+"18","Butzi","Welsh Corgi Pembroke","male","SP","Stranger","P","Introduction","Friendly",112,1.00747152278366
+"19","Cameron","Border Collie","male","CM","Caregiver","M","Introduction","Neutral",84,0.226434967661475
+"20","Campino","Romanian Mioritic Shepherd dog","male","SM","Stranger","M","Introduction","Friendly",31,-1.25195565453409
+"21","Carlisle","Border Collie","male","CP","Caregiver","P","Introduction","Neutral",105,0.812212384003116
+"22","Cassy3","Dackel-Shi Tzu-Mix","female","SM","Stranger","M","Introduction","Neutral",78,0.0590699915638631
+"23","Charly5","Spanish Water Dog","male","SP","Stranger","P","Introduction","Offensive",36,-1.11248484111942
+"24","Chasie","Border Collie","female","SM","Stranger","M","Introduction","Friendly",125,1.37009563766182
+"25","Cindy7","Mix","female","SP","Stranger","P","Introduction","Insecure",155,2.20692051814988
+"26","Cliff","Border Collie","male","CM","Caregiver","M","Introduction","IO",65,-0.303554123314295
+"27","Dada","Shepherd-Mix","female","SM","Stranger","M","Introduction","Neutral",41,-0.973014027704742
+"28","Dante","Galgo","male","CP","Caregiver","P","Introduction","Neutral",56,-0.554601587460713
+"29","Dottie","Mix Breed","female","CP","Caregiver","P","Introduction","Neutral",108,0.895894872051921
+"30","Dusty","Border Collie","female","CM","Caregiver","M","Introduction","Neutral",27,-1.36353230526584
+"31","Eisbaer","Maltese","male","SP","Stranger","P","Introduction","Offensive",18,-1.61457976941225
+"32","Emil6","Jack Russel Terrier-Mix","male","CP","Caregiver","P","Introduction","Neutral",87,0.310117455710281
+"33","Emil7","Parson Russel Terrier","male","CM","Caregiver","M","Introduction","Friendly",51,-0.694072400875389
+"34","Emily2","Border Collie","female","CP","Caregiver","P","Introduction","Insecure",136,1.67693142717411
+"35","Emily7","Collie-Mix","female","SP","Stranger","P","Introduction","Insecure",130,1.5095664510765
+"36","Emma7","German Shepherd","female","SM","Stranger","M","Introduction","IO",76,0.00328166619799257
+"37","Eowyn","Terrier-Mix","female","CM","Caregiver","M","Introduction","Offensive",22,-1.50300311868051
+"38","Fiby","French Bulldog","female","CM","Caregiver","M","Introduction","Neutral",58,-0.498813262094842
+"39","Finja","Labrador Shepherd-Mix","female","CM","Caregiver","M","Introduction","Offensive",27,-1.36353230526584
+"40","Finn7","Iceland Dog","male","SM","Stranger","M","Introduction","Offensive",17,-1.64247393209519
+"41","Flamme","Pyrenean Sheep dog-smooth faced","male","SM","Stranger","M","Introduction","Friendly",138,1.73271975253998
+"42","Freya","Husky-Malamute-Mix","female","SP","Stranger","P","Introduction","Offensive",71,-0.136189147216684
+"43","Gatsby","Border Collie","male","SM","Stranger","M","Introduction","Insecure",110,0.951683197417792
+"44","Gismo4","Border Collie-Mix","male","CP","Caregiver","P","Introduction","IO",55,-0.582495750143648
+"45","Grisu2","Magyar Vizla","male","CM","Caregiver","M","Introduction","IO",10,-1.83773307087574
+"46","Guinness3","Labrador-Mix","male","SM","Stranger","M","Introduction","Friendly",88,0.338011618393216
+"47","Hagrid","Drahthaar-Mix","male","CP","Caregiver","P","Introduction","Neutral",115,1.09115401083247
+"48","Hailey","Golden Retriever","female","SP","Stranger","P","Introduction","Friendly",83,0.198540804978539
+"49","Hanya","German Shepherd","female","SP","Stranger","P","Introduction","IO",60,-0.443024936728972
+"50","Helena","Standard Poodle","female","CM","Caregiver","M","Introduction","Neutral",97,0.589059082539633
+"51","Jia","Labrador Retriever","female","CM","Caregiver","M","Introduction","IO",28,-1.3356381425829
+"52","Jo-jo3","Kangal","male","CP","Caregiver","P","Introduction","Friendly",63,-0.359342448680166
+"53","Jolie","Pinscher-Whippet-Mix","female","CM","Caregiver","M","Introduction","Insecure",113,1.0353656854666
+"54","Kayleigh","Border Collie","female","CP","Caregiver","P","Introduction","Neutral",97,0.589059082539633
+"55","Kiki2","Mix Breed","female","CM","Caregiver","M","Introduction","IO",56,-0.554601587460713
+"56","Laiki","Dobermann-Mix","male","SP","Stranger","P","Introduction","Offensive",105,0.812212384003116
+"57","Leia","Beagle","female","CP","Caregiver","P","Introduction","Friendly",94,0.505376594490828
+"58","Lenni","Greyhound-Magyar agár Mix","male","CM","Caregiver","M","Introduction","Insecure",80,0.114858316929734
+"59","Levi","Mix","male","SP","Stranger","P","Introduction","IO",48,-0.777754888924195
+"60","Linus","Australian Shepherd","male","SP","Stranger","P","Introduction","Offensive",64,-0.331448285997231
+"61","Luca2","Scotia Duck Trolling Retriever","male","SM","Stranger","M","Introduction","Insecure",39,-1.02880235307061
+"62","Lumpi","Dackel-Mix","male","CM","Caregiver","M","Introduction","Offensive",48,-0.777754888924195
+"63","Maedi","Mix","female","CM","Caregiver","M","Introduction","Insecure",99,0.644847407905504
+"64","Maeva","Border Collie","female","SP","Stranger","P","Introduction","Insecure",101,0.700635733271374
+"65","Marlboro","Whippet","male","SM","Stranger","M","Introduction","Offensive",35,-1.14037900380235
+"66","Maroni","Miniature Pinscher","male","CP","Caregiver","P","Introduction","IO",82,0.170646642295604
+"67","Maylo","Border Collie-Mix","male","SP","Stranger","P","Introduction","Insecure",46,-0.833543214290066
+"68","Maylo2","Golden Retriever","male","CM","Caregiver","M","Introduction","Insecure",64,-0.331448285997231
+"69","Mia","Golden Retriever","female","CP","Caregiver","P","Introduction","Friendly",29,-1.30774397989997
+"70","Milow","Labrador Retriever Mix","male","SP","Stranger","P","Introduction","Insecure",102,0.72852989595431
+"71","Miss Face","Alaska Husky","female","CP","Caregiver","P","Introduction","Neutral",145,1.92797889132053
+"72","Monty2","Border Collie","male","CP","Caregiver","P","Introduction","Insecure",116,1.1190481735154
+"73","Mulan","Labrador-Drahthaar-Mix","female","SP","Stranger","P","Introduction","Insecure",115,1.09115401083247
+"74","Muesli","Border Collie","male","SP","Stranger","P","Introduction","Insecure",77,0.0311758288809278
+"75","Nana","Mix Breed","female","CP","Caregiver","P","Introduction","Insecure",67,-0.247765797948425
+"76","Nanouk2","Australian Shepherd","female","SP","Stranger","P","Introduction","Neutral",88,0.338011618393216
+"77","Nils2","Golden Retriever","male","CP","Caregiver","P","Introduction","Friendly",63,-0.359342448680166
+"78","Orlando","Long-Haired Collie","male","CP","Caregiver","P","Introduction","Offensive",109,0.923789034734857
+"79","Pamina2","American Staffordshire Terrier Mix","female","CM","Caregiver","M","Introduction","Insecure",57,-0.526707424777778
+"80","Paul2","Jack Russell Terrier-Mix","male","SM","Stranger","M","Introduction","Offensive",31,-1.25195565453409
+"81","Pepina","Boxer","female","CP","Caregiver","P","Introduction","Offensive",78,0.0590699915638631
+"82","Poppy2","Miniature Poodle-Spaniel-Mix","female","SP","Stranger","P","Introduction","Neutral",61,-0.415130774046037
+"83","Riu","Australian Shepherd","female","CP","Caregiver","P","Introduction","Insecure",17,-1.64247393209519
+"84","Ronja","Jack Russell Terrier-Mix","male","SM","Stranger","M","Introduction","Neutral",101,0.700635733271374
+"85","Runa","Czechoslovakian Wolfdog-Mix","female","CM","Caregiver","M","Introduction","Insecure",55,-0.582495750143648
+"86","Sambesi","Rhodesian Ridgeback","female","SM","Stranger","M","Introduction","Insecure",44,-0.889331539655936
+"87","Sammy8","Labradoodle","male","SP","Stranger","P","Introduction","Offensive",32,-1.22406149185116
+"88","Scampi","Labrador-Mix","male","CP","Caregiver","P","Introduction","Friendly",69,-0.191977472582554
+"89","Schoko","Magyar Vizsla","female","SM","Stranger","M","Introduction","Offensive",114,1.06325984814953
+"90","Sepp","Beagle","male","SM","Stranger","M","Introduction","Insecure",87,0.310117455710281
+"91","Sheila","Border Collie-Mix","female","SM","Stranger","M","Introduction","Insecure",81,0.142752479612669
+"92","Sixtus","Griffon Bruxellois","male","SM","Stranger","M","Introduction","Offensive",37,-1.08459067843648
+"93","Snoopy6","Beagle","male","CM","Caregiver","M","Introduction","Friendly",90,0.393799943759086
+"94","Sophie","Papillon","female","SM","Stranger","M","Introduction","Offensive",56,-0.554601587460713
+"95","Spin","Shetland Sheepdog","male","SP","Stranger","P","Introduction","Offensive",46,-0.833543214290066
+"96","Suka-Sevilla","Galgo","female","SP","Stranger","P","Introduction","Insecure",113,1.0353656854666
+"97","Sunny10","Miniature Poodle","female","SM","Stranger","M","Introduction","Offensive",30,-1.27984981721703
+"98","Thor","Husky","male","CM","Caregiver","M","Introduction","Offensive",33,-1.19616732916822
+"99","Yuki","Mix Breed","female","CP","Caregiver","P","Introduction","Insecure",49,-0.74986072624126
+"100","Zeus3","Mix Breed","male","SM","Stranger","M","Introduction","Insecure",57,-0.526707424777778
+"101","Zoe4","German Spitz (Pomeranian)","female","CP","Caregiver","P","Introduction","Neutral",137,1.70482558985704
+"102","Zuri","Rhodesian Ridgeback","female","CP","Caregiver","P","Introduction","Neutral",119,1.20273066156421
+"103","Aeden","Border  Collie","male","SM","Stranger","M","Interaction","Neutral",138,1.73271975253998
+"104","Akin","Rhodesian Ridgeback","male","CM","Caregiver","M","Interaction","Friendly",126,1.39798980034476
+"105","Akina","Akita Inu","female","SM","Stranger","M","Interaction","Neutral",133,1.5932489391253
+"106","Ame","Akita Inu","male","CP","Caregiver","P","Interaction","Friendly",42,-0.945119865021807
+"107","Amie","German Shepherd-Mix","female","CP","Caregiver","P","Interaction","Friendly",18,-1.61457976941225
+"108","Amy8","Border Collie","female","CM","Caregiver","M","Interaction","Neutral",114,1.06325984814953
+"109","Anouk3","Labrador Retriever","female","SP","Stranger","P","Interaction","Friendly",41,-0.973014027704742
+"110","Apryl","Border Collie","female","CM","Caregiver","M","Interaction","IO",127,1.42588396302769
+"111","Arielle","Border Collie","female","SP","Stranger","P","Interaction","Insecure",53,-0.638284075509519
+"112","Arkani2","Belgian Tervuren","male","CM","Caregiver","M","Interaction","Insecure",64,-0.331448285997231
+"113","Bailey2","Staffordshire Bull Terrier","female","SP","Stranger","P","Interaction","Insecure",65,-0.303554123314295
+"114","Balian","Border Collie","male","SP","Stranger","P","Interaction","Neutral",115,1.09115401083247
+"115","Barbarix2","Bearded Collie","male","CM","Caregiver","M","Interaction","Neutral",78,0.0590699915638631
+"116","Baerbel","Dackel-Terrier-Mix","female","SM","Stranger","M","Interaction","Friendly",60,-0.443024936728972
+"117","Batman","Jack Russel Terrier","male","SP","Stranger","P","Interaction","Neutral",142,1.84429640327172
+"118","Bella5","Kangal","female","SM","Stranger","M","Interaction","Friendly",86,0.282223293027345
+"119","Blacky","Mix","male","CM","Caregiver","M","Interaction","Friendly",99,0.644847407905504
+"120","Butzi","Welsh Corgi Pembroke","male","SP","Stranger","P","Interaction","Insecure",112,1.00747152278366
+"121","Cameron","Border Collie","male","CM","Caregiver","M","Interaction","Neutral",84,0.226434967661475
+"122","Campino","Romanian Mioritic Shepherd dog","male","SM","Stranger","M","Interaction","Friendly",31,-1.25195565453409
+"123","Carlisle","Border Collie","male","CP","Caregiver","P","Interaction","Neutral",105,0.812212384003116
+"124","Cassy3","Dackel-Shi Tzu-Mix","female","SM","Stranger","M","Interaction","Neutral",78,0.0590699915638631
+"125","Charly5","Spanish Water Dog","male","SP","Stranger","P","Interaction","Offensive",36,-1.11248484111942
+"126","Chasie","Border Collie","female","SM","Stranger","M","Interaction","Friendly",125,1.37009563766182
+"127","Cindy7","Mix","female","SP","Stranger","P","Interaction","Friendly",155,2.20692051814988
+"128","Cliff","Border Collie","male","CM","Caregiver","M","Interaction","IO",65,-0.303554123314295
+"129","Dada","Shepherd-Mix","female","SM","Stranger","M","Interaction","Neutral",41,-0.973014027704742
+"130","Dante","Galgo","male","CP","Caregiver","P","Interaction","Friendly",56,-0.554601587460713
+"131","Dottie","Mix Breed","female","CP","Caregiver","P","Interaction","Friendly",108,0.895894872051921
+"132","Dusty","Border Collie","female","CM","Caregiver","M","Interaction","Neutral",27,-1.36353230526584
+"133","Eisbaer","Maltese","male","SP","Stranger","P","Interaction","Offensive",18,-1.61457976941225
+"134","Emil6","Jack Russel Terrier-Mix","male","CP","Caregiver","P","Interaction","Offensive",87,0.310117455710281
+"135","Emil7","Parson Russel Terrier","male","CM","Caregiver","M","Interaction","Friendly",51,-0.694072400875389
+"136","Emily2","Border Collie","female","CP","Caregiver","P","Interaction","Friendly",136,1.67693142717411
+"137","Emily7","Collie-Mix","female","SP","Stranger","P","Interaction","Neutral",130,1.5095664510765
+"138","Emma7","German Shepherd","female","SM","Stranger","M","Interaction","Offensive",76,0.00328166619799257
+"139","Eowyn","Terrier-Mix","female","CM","Caregiver","M","Interaction","Offensive",22,-1.50300311868051
+"140","Fiby","French Bulldog","female","CM","Caregiver","M","Interaction","Neutral",58,-0.498813262094842
+"141","Finja","Labrador Shepherd-Mix","female","CM","Caregiver","M","Interaction","Neutral",27,-1.36353230526584
+"142","Finn7","Iceland Dog","male","SM","Stranger","M","Interaction","IO",17,-1.64247393209519
+"143","Flamme","Pyrenean Sheep dog-smooth faced","male","SM","Stranger","M","Interaction","Friendly",138,1.73271975253998
+"144","Freya","Husky-Malamute-Mix","female","SP","Stranger","P","Interaction","Friendly",71,-0.136189147216684
+"145","Gatsby","Border Collie","male","SM","Stranger","M","Interaction","Friendly",110,0.951683197417792
+"146","Gismo4","Border Collie-Mix","male","CP","Caregiver","P","Interaction","Insecure",55,-0.582495750143648
+"147","Grisu2","Magyar Vizla","male","CM","Caregiver","M","Interaction","IO",10,-1.83773307087574
+"148","Guinness3","Labrador-Mix","male","SM","Stranger","M","Interaction","Neutral",88,0.338011618393216
+"149","Hagrid","Drahthaar-Mix","male","CP","Caregiver","P","Interaction","Friendly",115,1.09115401083247
+"150","Hailey","Golden Retriever","female","SP","Stranger","P","Interaction","Friendly",83,0.198540804978539
+"151","Hanya","German Shepherd","female","SP","Stranger","P","Interaction","Neutral",60,-0.443024936728972
+"152","Helena","Standard Poodle","female","CM","Caregiver","M","Interaction","Neutral",97,0.589059082539633
+"153","Jia","Labrador Retriever","female","CM","Caregiver","M","Interaction","Friendly",28,-1.3356381425829
+"154","Jo-jo3","Kangal","male","CP","Caregiver","P","Interaction","Friendly",63,-0.359342448680166
+"155","Jolie","Pinscher-Whippet-Mix","female","CM","Caregiver","M","Interaction","Insecure",113,1.0353656854666
+"156","Kayleigh","Border Collie","female","CP","Caregiver","P","Interaction","Neutral",97,0.589059082539633
+"157","Kiki2","Mix Breed","female","CM","Caregiver","M","Interaction","IO",56,-0.554601587460713
+"158","Laiki","Dobermann-Mix","male","SP","Stranger","P","Interaction","Offensive",105,0.812212384003116
+"159","Leia","Beagle","female","CP","Caregiver","P","Interaction","Friendly",94,0.505376594490828
+"160","Lenni","Greyhound-Magyar agár Mix","male","CM","Caregiver","M","Interaction","Neutral",80,0.114858316929734
+"161","Levi","Mix","male","SP","Stranger","P","Interaction","Friendly",48,-0.777754888924195
+"162","Linus","Australian Shepherd","male","SP","Stranger","P","Interaction","Friendly",64,-0.331448285997231
+"163","Luca2","Scotia Duck Trolling Retriever","male","SM","Stranger","M","Interaction","Neutral",39,-1.02880235307061
+"164","Lumpi","Dackel-Mix","male","CM","Caregiver","M","Interaction","Offensive",48,-0.777754888924195
+"165","Maedi","Mix","female","CM","Caregiver","M","Interaction","Insecure",99,0.644847407905504
+"166","Maeva","Border Collie","female","SP","Stranger","P","Interaction","Neutral",101,0.700635733271374
+"167","Marlboro","Whippet","male","SM","Stranger","M","Interaction","Friendly",35,-1.14037900380235
+"168","Maroni","Miniature Pinscher","male","CP","Caregiver","P","Interaction","Offensive",82,0.170646642295604
+"169","Maylo","Border Collie-Mix","male","SP","Stranger","P","Interaction","Friendly",46,-0.833543214290066
+"170","Maylo2","Golden Retriever","male","CM","Caregiver","M","Interaction","Insecure",64,-0.331448285997231
+"171","Mia","Golden Retriever","female","CP","Caregiver","P","Interaction","Friendly",29,-1.30774397989997
+"172","Milow","Labrador Retriever Mix","male","SP","Stranger","P","Interaction","Insecure",102,0.72852989595431
+"173","Miss Face","Alaska Husky","female","CP","Caregiver","P","Interaction","Neutral",145,1.92797889132053
+"174","Monty2","Border Collie","male","CP","Caregiver","P","Interaction","Friendly",116,1.1190481735154
+"175","Mulan","Labrador-Drahthaar-Mix","female","SP","Stranger","P","Interaction","Neutral",115,1.09115401083247
+"176","Muesli","Border Collie","male","SP","Stranger","P","Interaction","Friendly",77,0.0311758288809278
+"177","Nana","Mix Breed","female","CP","Caregiver","P","Interaction","Friendly",67,-0.247765797948425
+"178","Nanouk2","Australian Shepherd","female","SP","Stranger","P","Interaction","Neutral",88,0.338011618393216
+"179","Nils2","Golden Retriever","male","CP","Caregiver","P","Interaction","Friendly",63,-0.359342448680166
+"180","Orlando","Long-Haired Collie","male","CP","Caregiver","P","Interaction","Friendly",109,0.923789034734857
+"181","Pamina2","American Staffordshire Terrier Mix","female","CM","Caregiver","M","Interaction","Neutral",57,-0.526707424777778
+"182","Paul2","Jack Russell Terrier-Mix","male","SM","Stranger","M","Interaction","Neutral",31,-1.25195565453409
+"183","Pepina","Boxer","female","CP","Caregiver","P","Interaction","Friendly",78,0.0590699915638631
+"184","Poppy2","Miniature Poodle-Spaniel-Mix","female","SP","Stranger","P","Interaction","Neutral",61,-0.415130774046037
+"185","Riu","Australian Shepherd","female","CP","Caregiver","P","Interaction","Offensive",17,-1.64247393209519
+"186","Ronja","Jack Russell Terrier-Mix","male","SM","Stranger","M","Interaction","Neutral",101,0.700635733271374
+"187","Runa","Czechoslovakian Wolfdog-Mix","female","CM","Caregiver","M","Interaction","Insecure",55,-0.582495750143648
+"188","Sambesi","Rhodesian Ridgeback","female","SM","Stranger","M","Interaction","Neutral",44,-0.889331539655936
+"189","Sammy8","Labradoodle","male","SP","Stranger","P","Interaction","Friendly",32,-1.22406149185116
+"190","Scampi","Labrador-Mix","male","CP","Caregiver","P","Interaction","Friendly",69,-0.191977472582554
+"191","Schoko","Magyar Vizsla","female","SM","Stranger","M","Interaction","Offensive",114,1.06325984814953
+"192","Sepp","Beagle","male","SM","Stranger","M","Interaction","Friendly",87,0.310117455710281
+"193","Sheila","Border Collie-Mix","female","SM","Stranger","M","Interaction","Offensive",81,0.142752479612669
+"194","Sixtus","Griffon Bruxellois","male","SM","Stranger","M","Interaction","Insecure",37,-1.08459067843648
+"195","Snoopy6","Beagle","male","CM","Caregiver","M","Interaction","Friendly",90,0.393799943759086
+"196","Sophie","Papillon","female","SM","Stranger","M","Interaction","Offensive",56,-0.554601587460713
+"197","Spin","Shetland Sheepdog","male","SP","Stranger","P","Interaction","Offensive",46,-0.833543214290066
+"198","Suka-Sevilla","Galgo","female","SP","Stranger","P","Interaction","Insecure",113,1.0353656854666
+"199","Sunny10","Miniature Poodle","female","SM","Stranger","M","Interaction","Neutral",30,-1.27984981721703
+"200","Thor","Husky","male","CM","Caregiver","M","Interaction","Friendly",33,-1.19616732916822
+"201","Yuki","Mix Breed","female","CP","Caregiver","P","Interaction","Friendly",49,-0.74986072624126
+"202","Zeus3","Mix Breed","male","SM","Stranger","M","Interaction","Insecure",57,-0.526707424777778
+"203","Zoe4","German Spitz (Pomeranian)","female","CP","Caregiver","P","Interaction","Neutral",137,1.70482558985704
+"204","Zuri","Rhodesian Ridgeback","female","CP","Caregiver","P","Interaction","Neutral",119,1.20273066156421

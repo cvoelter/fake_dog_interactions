@@ -1,0 +1,765 @@
+---
+title: "Dog Jealousy- analysis Script"
+author: "CV"
+date: "February 14, 2021"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+
+knitr::opts_chunk$set(echo = TRUE)
+
+rm(list=ls())
+
+
+library(lme4)
+library(MASS) 
+library(ggthemes)
+library(psych)
+library(cowplot)
+library(glmmTMB)
+library(eeptools)
+library(car)
+library(ggsignif)
+library(tidyverse)
+library(summarytools)
+
+source("./functions/diagnostic_fcns.r")
+source("./functions/glmm_stability.r")
+source("./functions/boot_glmm.r")
+source("./functions/drop1_para.r")
+
+
+```
+
+## Load raw data
+```{r loading data, include = FALSE}
+agg.data <- read.csv(file="data/dog_jealousy_aggregated_data.csv")
+
+view(dfSummary(agg.data))
+
+hist(agg.data$blocking.sum)
+hist(agg.data$non.off.manipulation.sum)
+hist(agg.data$dom.beh.sum)
+hist(agg.data$interaction.dog.sum)
+hist(agg.data$first_approach_dog)
+hist(agg.data$sniffing.dog.sum)
+hist(agg.data$sniff.dog.anal.sum)
+hist(agg.data$friendly_beh_humans.sum)
+
+
+table(agg.data$condition, agg.data$blocking.presence)
+table(agg.data$condition, agg.data$non.off.manipulation.presence)
+table(agg.data$condition, agg.data$dom.beh.presence)
+table(agg.data$condition, agg.data$friendly_beh_humans.presence)
+
+```
+
+## Centering variables for modeling
+``` {r error=TRUE}
+model.data <- agg.data %>% 
+  mutate(z.age = as.numeric(scale(age, scale = T, center = T)),
+         sex.c = as.numeric(scale(as.numeric(as.factor(sex)), scale = F, center = T)))
+
+as.data.frame(model.data)
+view(dfSummary(model.data))
+```
+
+
+## Blocking variable
+
+```{r}
+blocking.glm01 <- glm(blocking.presence ~ human * treatment + z.age + sex, 
+             data = model.data, family = binomial)
+
+drop1(blocking.glm01, test="Chisq")#likelihood ratio test
+```
+
+```{r}
+blocking.glm02 <- glm(blocking.presence ~ human + treatment + z.age + sex, 
+             data = model.data, family = binomial)
+
+summary(blocking.glm02)
+
+drop1(blocking.glm02, test="Chisq")#likelihood ratio test
+```
+
+#### full-null model comparison
+
+```{r}
+# null model
+blocking.null <- glm(blocking.presence ~ z.age + sex, 
+             data = model.data, family = binomial)
+
+# comparison
+anova(blocking.glm02, blocking.null, test="Chisq")
+# --> sign. 0.03
+
+```
+
+
+#### check for collinearity in the previous model.
+
+```{R echo=FALSE, error=FALSE, warning=FALSE}
+
+col.blocking.glm <- lm(blocking.presence ~ human + treatment + z.age + sex, data = model.data)
+vif(col.blocking.glm)
+```
+
+
+
+#### Model stability
+```{r}
+cbind(coef(blocking.glm02), coef(blocking.glm02)+t(apply(X=dfbeta(blocking.glm02), MARGIN=2, FUN=range)))
+# min and max of model estimates
+```
+
+#### Confidence intervals
+```{r}
+cbind(orig=coefficients(blocking.glm02), confint(object=blocking.glm02))
+```
+
+### CI for the plot
+
+```{r}
+blocking.glm02.ci <- glm(blocking.presence ~ human + treatment + z.age + sex.c, 
+             data = model.data, family = binomial)
+##adding fitted values
+fv=rep(NA, times=4)
+fv[1]=coef(blocking.glm02.ci )["(Intercept)"]
+fv[2]=sum(coef(blocking.glm02.ci)[c("(Intercept)", "treatmentP")])
+fv[3]=sum(coef(blocking.glm02.ci)[c("(Intercept)", "humanS")])
+fv[4]=sum(coef(blocking.glm02.ci)[c("(Intercept)", "treatmentP",
+"humanS")])
+fv=exp(fv)/(1+exp(fv))
+
+to.plot <- model.data %>%
+  group_by(human, treatment)%>%
+  summarise(mean.blocking=mean(blocking.presence))%>%
+  ungroup()
+
+to.plot$z.age=0
+to.plot$sex.c=0
+
+
+ci.plot=predict.glm(object=blocking.glm02.ci, newdata=to.plot,type="link", se.fit=T)
+
+
+ci.plot=data.frame(
+lwr=ci.plot$fit-ci.plot$se.fit*
+abs(qt(p=0.025, df=blocking.glm02.ci$df.residual)),
+upr=ci.plot$fit+ci.plot$se.fit*
+abs(qt(p=0.025, df=blocking.glm02.ci$df.residual))
+)
+ci.plot=exp(ci.plot)/(1+exp(ci.plot))
+
+to.plot=(cbind(to.plot, fv, ci.plot))
+
+```
+
+
+
+### plotting
+
+```{r}
+
+blocking.plot.data <- agg.data %>%
+  mutate(human = fct_recode(human, "Caregiver" = "C", "Stranger" = "S"), treatment=fct_recode(treatment, "Vet Check"="M", "Greeting"="P"))%>% #renaming of factor levels
+  group_by(condition, human, treatment)%>%
+  summarise(mean.blocking=mean(blocking.presence), sd.blocking=sd(blocking.presence),  median.blocking=median(blocking.presence),  se.blocking=sd(blocking.presence)/sqrt(length(blocking.presence)))
+
+blocking.plot.data <- cbind(as.data.frame(blocking.plot.data), fv, ci.plot)
+
+plot.blocking <- ggplot(
+  data=blocking.plot.data, aes(x=human, y=mean.blocking, fill=treatment)) +
+  geom_bar(stat="identity", alpha=0.5, position=position_dodge(width = 0.9))+
+  geom_errorbar(aes(ymin=lwr, ymax=upr), width = 0.5,position=position_dodge(width = 0.9)) +
+  geom_point(aes(y=fv), position=position_dodge(width = 0.9)) +
+  geom_signif(comparisons = list(c("Caregiver", "Stranger")), 
+              annotation=c("*"), y_position = 0.79)+
+  scale_fill_manual(values=c("dodgerblue","darkorange"))+
+  ylim(0,1)+
+  theme_classic()+
+  labs(x="Condition",y="Blocking")+
+  theme(legend.title = element_blank(), legend.position = c(0.8, 0.9))+
+    guides(fill = guide_legend(override.aes = list(shape = NA)))
+ # theme(legend.position = "none")
+
+plot.blocking
+
+ggsave(plot.blocking, filename = "graphs/blocking_plot.png", width = 8, height = 6, scale = 0.65)
+```
+
+
+## Interaction with fake dog
+
+
+```{r}
+int.glm01 <- glm(interaction.dog.presence ~ human * treatment + z.age + sex, 
+             data = model.data, family = binomial)
+
+summary(int.glm01)
+
+drop1(int.glm01, test="Chisq")#likelihood ratio test
+
+```
+
+```{r}
+int.glm02 <- glm(interaction.dog.presence ~ human + treatment + z.age + sex, 
+             data = model.data, family = binomial)
+
+summary(int.glm02)
+
+drop1(int.glm02, test="Chisq")#likelihood ratio test
+```
+
+#### full-null model comparison
+
+```{r}
+# null model
+int.null <- glm(interaction.dog.presence ~ z.age + sex, 
+             data = model.data, family = binomial)
+
+# comparison
+anova(int.glm02, int.null, test="Chisq")
+# --> sign. 0.004
+
+```
+
+#### check for collinearity in the previous model.
+
+```{R echo=FALSE, error=FALSE, warning=FALSE}
+
+col.int.glm <- lm(interaction.dog.presence ~ human + treatment + z.age + sex, data = model.data)
+vif(col.int.glm)
+#no problem
+```
+
+#### Model stability
+```{r}
+cbind(coef(int.glm02),coef(int.glm02)+t(apply(X=dfbeta(int.glm02), MARGIN=2, FUN=range)))
+```
+
+#### Confidence intervals
+```{r}
+cbind(orig=coefficients(int.glm02), confint(object=int.glm02))
+```
+
+### CI for the plot
+
+```{r}
+int.glm02.ci <- glm(interaction.dog.presence ~ human + treatment + z.age + sex.c, 
+             data = model.data, family = binomial)
+##adding fitted values
+fv=rep(NA, times=4)
+fv[1]=coef(int.glm02.ci )["(Intercept)"]
+fv[2]=sum(coef(int.glm02.ci)[c("(Intercept)", "treatmentP")])
+fv[3]=sum(coef(int.glm02.ci)[c("(Intercept)", "humanS")])
+fv[4]=sum(coef(int.glm02.ci)[c("(Intercept)", "treatmentP",
+"humanS")])
+fv=exp(fv)/(1+exp(fv))
+
+to.plot <- model.data %>%
+  group_by(human, treatment)%>%
+  summarise(mean.int=mean(interaction.dog.presence))%>%
+  ungroup()
+
+to.plot$z.age=0
+to.plot$sex.c=0
+
+
+ci.plot=predict.glm(object=int.glm02.ci, newdata=to.plot,type="link", se.fit=T)
+
+
+ci.plot=data.frame(
+lwr=ci.plot$fit-ci.plot$se.fit*
+abs(qt(p=0.025, df=int.glm02.ci$df.residual)),
+upr=ci.plot$fit+ci.plot$se.fit*
+abs(qt(p=0.025, df=int.glm02.ci$df.residual))
+)
+ci.plot=exp(ci.plot)/(1+exp(ci.plot))
+
+to.plot=(cbind(to.plot, fv, ci.plot))
+
+```
+
+
+
+### plotting
+
+```{r}
+
+int.plot.data <- model.data %>%
+  mutate(human = fct_recode(human, "Caregiver" = "C", "Stranger" = "S"), treatment=fct_recode(treatment, "Vet Check"="M", "Greeting"="P"))%>% #renaming of factor levels
+  group_by(condition, human, treatment)%>%
+  summarise(mean.int=mean(interaction.dog.presence), sd.int=sd(interaction.dog.presence),  median.int=median(interaction.dog.presence),  se.int=sd(interaction.dog.presence)/sqrt(length(interaction.dog.presence)))
+
+int.plot.data <- cbind(as.data.frame(int.plot.data), fv, ci.plot)
+
+
+plot.int <- ggplot(
+  data=int.plot.data, aes(x=human, y=mean.int, fill=treatment)) +
+  geom_bar(stat="identity", alpha=0.5, position=position_dodge(width = 0.9))+
+  geom_errorbar(aes(ymin=lwr, ymax=upr), width = 0.5,position=position_dodge(width = 0.9)) +
+  geom_point(aes(y=fv), position=position_dodge(width = 0.9)) +
+  scale_fill_manual(values=c("dodgerblue","darkorange"))+
+  geom_signif(comparisons = list(c("Caregiver", "Stranger")), 
+              annotation=c("*"), y_position = 0.9)+
+  geom_signif(y_position = c(0.8, 0.8), xmin = c(0.8, 1.8), xmax = c(1.2, 2.2),
+    annotation = c("*", "*"))+
+  #geom_signif(aes(xmin = xmin, xmax = xmax, y_position = y_position, annotations = signif), data=stat.test, manual = TRUE, tip_length = 0)+
+  ylim(0,1)+
+  theme_classic()+
+  labs(x="Condition",y="Friendly interaction w. fake dog")+
+  #theme(legend.title = element_blank(), legend.position = c(0.8, 0.9))+
+  #guides(fill = guide_legend(override.aes = list(shape = NA)))+
+  theme(legend.position = "none")
+plot.int
+
+ggsave(plot.int , filename = "graphs/int_plot.png", width = 8, height = 6, scale = 0.65) # not running yet due to new csv file
+```
+
+
+## Anal sniffing dog
+
+```{r}
+anal.sniff.glm01.poisson <- glm(sniff.dog.anal.sum ~ human * treatment + z.age + sex, 
+             data = model.data, family = poisson)
+
+overdisp.test(anal.sniff.glm01.poisson)
+
+```
+
+```{r}
+anal.sniff.glm01.nb=glm.nb(sniff.dog.anal.sum ~ human * treatment + z.age + sex, data = model.data)
+overdisp.test(anal.sniff.glm01.nb)
+drop1(anal.sniff.glm01.nb, test="Chisq")
+# interaction not significant
+```
+
+
+```{r}
+anal.sniff.glm02.nb=glm.nb(sniff.dog.anal.sum ~ human + treatment + z.age + sex, data = model.data)
+
+overdisp.test(anal.sniff.glm02.nb)
+
+summary(anal.sniff.glm02.nb)
+
+drop1(anal.sniff.glm02.nb, test="Chisq")#likelihood ratio test
+```
+
+#### full-null model comparison
+
+```{r}
+# null model
+anal.sniff.null.nb=glm.nb(sniff.dog.anal.sum ~  z.age + sex, data = model.data)
+
+# comparison
+anova(anal.sniff.glm02.nb, anal.sniff.null.nb, test="Chisq") # anova not possible for 
+```
+
+
+#### check for collinearity in the previous model.
+
+```{R echo=FALSE, error=FALSE, warning=FALSE}
+
+col.anal.sniff.glm <- lm(sniff.dog.anal.sum ~ human + treatment + z.age + sex, data = model.data)
+vif(col.anal.sniff.glm)
+#no problem
+```
+
+#### Model stability
+```{r}
+cbind(coef(anal.sniff.glm02.nb),coef(anal.sniff.glm02.nb)+t(apply(X=dfbeta(anal.sniff.glm02.nb), MARGIN=2, FUN=range)))
+```
+
+#### Confidence intervals
+```{r}
+cbind(orig=coefficients(anal.sniff.glm02.nb), confint(object=anal.sniff.glm02.nb))
+```
+
+### CI for the plot
+
+```{r}
+
+anal.sniff.glm02.nb.ci=glm.nb(sniff.dog.anal.sum ~ human + treatment + z.age + sex.c, data = model.data)
+##adding fitted values
+fv=rep(NA, times=4)
+fv[1]=coef(anal.sniff.glm02.nb.ci )["(Intercept)"]
+fv[2]=sum(coef(anal.sniff.glm02.nb.ci)[c("(Intercept)", "treatmentP")])
+fv[3]=sum(coef(anal.sniff.glm02.nb.ci)[c("(Intercept)", "humanS")])
+fv[4]=sum(coef(anal.sniff.glm02.nb.ci)[c("(Intercept)", "treatmentP",
+"humanS")])
+fv=exp(fv)
+
+to.plot <- model.data %>%
+  group_by(human, treatment)%>%
+  summarise(mean.int=mean(sniff.dog.anal.sum))%>%
+  ungroup()
+
+to.plot$z.age=0
+to.plot$sex.c=0
+
+
+ci.plot=predict.glm(object=anal.sniff.glm02.nb.ci, newdata=to.plot,type="link", se.fit=T)
+
+
+ci.plot=data.frame(
+lwr=ci.plot$fit-ci.plot$se.fit*
+abs(qt(p=0.025, df=anal.sniff.glm02.nb.ci$df.residual)),
+upr=ci.plot$fit+ci.plot$se.fit*
+abs(qt(p=0.025, df=anal.sniff.glm02.nb.ci$df.residual))
+)
+ci.plot=exp(ci.plot)
+
+to.plot=(cbind(to.plot, fv, ci.plot))
+
+```
+
+
+### plotting
+
+```{r}
+
+anal.sniff.plot.data <- model.data %>%
+  mutate(human = fct_recode(human, "Caregiver" = "C", "Stranger" = "S"), treatment=fct_recode(treatment, "Vet Check"="M", "Greeting"="P"))%>% #renaming of factor levels
+  group_by(condition, human, treatment)%>%
+  summarise(mean.sniff=mean(sniff.dog.anal.sum), sd.sniff=sd(sniff.dog.anal.sum),  median.sniff=median(sniff.dog.anal.sum),  se.sniff=sd(sniff.dog.anal.sum)/sqrt(length(sniff.dog.anal.sum)))
+
+anal.sniff.plot.data <- cbind(as.data.frame(anal.sniff.plot.data), fv, ci.plot)
+
+plot.anal.sniff <- ggplot(
+  data=anal.sniff.plot.data, aes(x=human, y=mean.sniff, fill=treatment)) +
+  geom_bar(stat="identity", alpha=0.5, position=position_dodge(width = 0.9))+
+  geom_errorbar(aes(ymin=lwr, ymax=upr), width = 0.5,position=position_dodge(width = 0.9)) +
+  geom_point(aes(y=fv), position=position_dodge(width = 0.9)) +
+  scale_fill_manual(values=c("dodgerblue","darkorange"))+
+  geom_signif(comparisons = list(c("Caregiver", "Stranger")), 
+              annotation=c("*"), y_position = 4.5)+
+  #geom_signif(aes(xmin = xmin, xmax = xmax, y_position = y_position, annotations = signif), data=stat.test, manual = TRUE, tip_length = 0)+
+   ylim(0,5)+
+   theme_classic()+
+  labs(x="Condition",y="Sniffing of fake dog (count)")+
+  theme(legend.position = "none")
+plot.anal.sniff
+
+ggsave(plot.anal.sniff , filename = "graphs/anal_sniffing_plot.png", width = 8, height = 6, scale = 0.65) 
+```
+## First approach of fake dog
+
+```{r}
+approach.model.data <- model.data %>% 
+  filter(!is.na(first_approach_dog))%>%
+  mutate(z.age = as.numeric(scale(age, scale = T, center = T)),
+         sex.c = as.numeric(scale(as.numeric(as.factor(sex)), scale = F, center = T)))
+
+approach.glm01 <- glm(first_approach_dog ~ human * treatment + z.age + sex, 
+             data = approach.model.data, family = binomial)
+
+summary(approach.glm01)
+
+drop1(approach.glm01, test="Chisq")#likelihood ratio test
+
+```
+
+```{r}
+approach.glm02 <- glm(first_approach_dog ~ human + treatment + z.age + sex, 
+             data = approach.model.data, family = binomial)
+
+summary(approach.glm02)
+
+drop1(approach.glm02, test="Chisq")#likelihood ratio test
+```
+
+#### full-null model comparison
+
+```{r}
+# null model
+approach.null <- glm(first_approach_dog ~ z.age + sex, 
+             data = model.data, family = binomial)
+
+# comparison
+anova(approach.glm02, approach.null, test="Chisq")
+# --> sign. 0.017
+
+```
+
+#### check for collinearity in the previous model.
+
+```{R echo=FALSE, error=FALSE, warning=FALSE}
+
+col.approach.glm <- lm(first_approach_dog ~ human + treatment + z.age + sex, data = model.data)
+vif(col.approach.glm)
+#no problem
+```
+
+#### Model stability
+```{r}
+cbind(coef(approach.glm02),coef(approach.glm02)+t(apply(X=dfbeta(approach.glm02), MARGIN=2, FUN=range)))
+```
+
+#### Confidence intervals
+```{r}
+cbind(orig=coefficients(approach.glm02), confint(object=approach.glm02))
+```
+
+### CI for the plot
+
+```{r}
+approach.glm02.ci <- glm(first_approach_dog ~ human + treatment + z.age + sex.c, 
+             data = model.data, family = binomial)
+##adding fitted values
+fv=rep(NA, times=4)
+fv[1]=coef(approach.glm02.ci )["(Intercept)"]
+fv[2]=sum(coef(approach.glm02.ci)[c("(Intercept)", "treatmentP")])
+fv[3]=sum(coef(approach.glm02.ci)[c("(Intercept)", "humanS")])
+fv[4]=sum(coef(approach.glm02.ci)[c("(Intercept)", "treatmentP",
+"humanS")])
+fv=exp(fv)/(1+exp(fv))
+
+to.plot <- model.data %>%
+  group_by(human, treatment)%>%
+  summarise(mean.approach=mean(first_approach_dog))%>%
+  ungroup()
+
+to.plot$z.age=0
+to.plot$sex.c=0
+
+
+ci.plot=predict.glm(object=approach.glm02.ci, newdata=to.plot,type="link", se.fit=T)
+
+
+ci.plot=data.frame(
+lwr=ci.plot$fit-ci.plot$se.fit*
+abs(qt(p=0.025, df=approach.glm02.ci$df.residual)),
+upr=ci.plot$fit+ci.plot$se.fit*
+abs(qt(p=0.025, df=approach.glm02.ci$df.residual))
+)
+ci.plot=exp(ci.plot)/(1+exp(ci.plot))
+
+to.plot=(cbind(to.plot, fv, ci.plot))
+
+```
+
+
+
+### plotting
+
+```{r}
+
+approach.plot.data <- model.data %>%
+  mutate(human = fct_recode(human, "Caregiver" = "C", "Stranger" = "S"), treatment=fct_recode(treatment, "Vet Check"="M", "Greeting"="P"))%>% #renaming of factor levels
+  group_by(condition, human, treatment)%>%
+  summarise(mean.approach=mean(first_approach_dog, na.rm=TRUE), sd.approach=sd(first_approach_dog),  median.approach=median(first_approach_dog),  se.approach=sd(first_approach_dog)/sqrt(length(first_approach_dog)))
+
+approach.plot.data <- cbind(as.data.frame(approach.plot.data), fv, ci.plot)
+
+plot.approach <- ggplot(
+  data=approach.plot.data, aes(x=human, y=mean.approach, fill=treatment)) +
+  geom_bar(stat="identity", alpha=0.5, position=position_dodge(width = 0.9))+
+  geom_errorbar(aes(ymin=lwr, ymax=upr), width = 0.5,position=position_dodge(width = 0.9)) +
+  geom_point(aes(y=fv), position=position_dodge(width = 0.9)) +
+  scale_fill_manual(values=c("dodgerblue","darkorange"))+
+  #geom_signif(aes(xmin = xmin, xmax = xmax, y_position = y_position, annotations = signif), data=stat.test, manual = TRUE, tip_length = 0)+
+  ylim(0,1)+
+  theme_classic()+
+  labs(x="Condition",y="First approach of fake dog")+
+  theme(legend.position = "none")+
+    geom_signif(comparisons = list(c("Caregiver", "Stranger")), 
+              annotation=c("*"), y_position = 0.98)
+plot.approach
+
+ggsave(plot.approach , filename = "graphs/approach_plot.png", width = 8, height = 6, scale = 0.65) # not running yet due to new csv file
+```
+
+## Friendly behaviors toward humans
+```{r}
+fb.humans.glm01 <- glm(friendly_beh_humans.presence ~ human * treatment + z.age + sex, 
+             data = model.data, family = binomial)
+
+drop1(fb.humans.glm01, test="Chisq")#likelihood ratio test
+
+```
+
+```{r}
+fb.humans.glm02 <- glm(friendly_beh_humans.presence ~ human + treatment + z.age + sex, 
+             data = model.data, family = binomial)
+
+summary(fb.humans.glm02)
+
+drop1(fb.humans.glm02, test="Chisq")#likelihood ratio test
+```
+
+#### full-null model comparison
+
+```{r}
+# null model
+fb.humans.null <- glm(friendly_beh_humans.presence ~ z.age + sex, 
+             data = model.data, family = binomial)
+
+# comparison
+anova(fb.humans.glm02, fb.humans.null, test="Chisq")
+
+```
+
+#### check for collinearity in the previous model.
+
+```{R echo=FALSE, error=FALSE, warning=FALSE}
+
+col.fb.humans.glm <- lm(friendly_beh_humans.presence ~ human + treatment + z.age + sex, data = model.data)
+vif(col.fb.humans.glm)
+#no problem
+```
+
+#### Model stability
+```{r}
+cbind(coef(fb.humans.glm02),coef(fb.humans.glm02)+t(apply(X=dfbeta(fb.humans.glm02), MARGIN=2, FUN=range)))
+```
+
+#### Confidence intervals
+```{r}
+cbind(orig=coefficients(fb.humans.glm02), confint(object=fb.humans.glm02))
+```
+
+### CI for the plot
+
+```{r}
+fb.humans.glm02.ci <- glm(friendly_beh_humans.presence ~ human + treatment + z.age + sex.c, 
+             data = model.data, family = binomial)
+##adding fitted values
+fv=rep(NA, times=4)
+fv[1]=coef(fb.humans.glm02.ci )["(Intercept)"]
+fv[2]=sum(coef(fb.humans.glm02.ci)[c("(Intercept)", "treatmentP")])
+fv[3]=sum(coef(fb.humans.glm02.ci)[c("(Intercept)", "humanS")])
+fv[4]=sum(coef(fb.humans.glm02.ci)[c("(Intercept)", "treatmentP",
+"humanS")])
+fv=exp(fv)/(1+exp(fv))
+
+to.plot <- model.data %>%
+  group_by(human, treatment)%>%
+  summarise(mean.fb_humans=mean(friendly_beh_humans.presence))%>%
+  ungroup()
+
+to.plot$z.age=0
+to.plot$sex.c=0
+
+
+ci.plot=predict.glm(object=fb.humans.glm02.ci, newdata=to.plot,type="link", se.fit=T)
+
+
+ci.plot=data.frame(
+lwr=ci.plot$fit-ci.plot$se.fit*
+abs(qt(p=0.025, df=fb.humans.glm02.ci$df.residual)),
+upr=ci.plot$fit+ci.plot$se.fit*
+abs(qt(p=0.025, df=fb.humans.glm02.ci$df.residual))
+)
+ci.plot=exp(ci.plot)/(1+exp(ci.plot))
+
+to.plot=(cbind(to.plot, fv, ci.plot))
+
+```
+### plotting
+
+```{r}
+
+fb.humans.plot.data <- model.data %>%
+  mutate(human = fct_recode(human, "Caregiver" = "C", "Stranger" = "S"), treatment=fct_recode(treatment, "Vet Check"="M", "Greeting"="P"))%>% #renaming of factor levels
+  group_by(condition, human, treatment)%>%
+  summarise(mean.fb_humans=mean(friendly_beh_humans.presence, na.rm=TRUE), sd.fb_humans=sd(friendly_beh_humans.presence),  median.fb_humans=median(friendly_beh_humans.presence),  se.fb_humans=sd(friendly_beh_humans.presence)/sqrt(length(friendly_beh_humans.presence)))
+
+fb.humans.plot.data <- cbind(as.data.frame(fb.humans.plot.data), fv, ci.plot)
+
+plot.fb_humans <- ggplot(
+  data=fb.humans.plot.data, aes(x=human, y=mean.fb_humans, fill=treatment)) +
+  geom_bar(stat="identity", alpha=0.5, position=position_dodge(width = 0.9))+
+  geom_errorbar(aes(ymin=lwr, ymax=upr), width = 0.5,position=position_dodge(width = 0.9)) +
+  geom_point(aes(y=fv), position=position_dodge(width = 0.9)) +
+  scale_fill_manual(values=c("dodgerblue","darkorange"))+
+  #geom_signif(aes(xmin = xmin, xmax = xmax, y_position = y_position, annotations = signif), data=stat.test, manual = TRUE, tip_length = 0)+
+  ylim(0,1)+
+  theme_classic()+
+  labs(x="Condition",y="Friendly interaction w. human")+
+  theme(legend.position = "none")
+    #geom_signif(comparisons = list(c("Caregiver", "Stranger")), annotation=c("p=0.056"), y_position = 0.98)
+plot.fb_humans
+
+ggsave(plot.fb_humans , filename = "graphs/fb_humans_plot.png", width = 8, height = 6, scale = 0.65) 
+```
+
+### combining plots
+```{r}
+plot.legend <- ggplot(
+  data=approach.plot.data, aes(x=human, y=mean.approach, fill=treatment)) +
+  geom_bar(stat="identity", alpha=0.5, position=position_dodge(width = 0.9))+
+    scale_fill_manual(values=c("dodgerblue","darkorange"))+
+    theme(legend.position = "top", legend.title = element_blank())
+plot.legend
+
+p.leg <- get_legend(plot.legend)
+
+```
+
+## behavioral categories: reaction phase
+```{r fig.width=5, fig.height=4}
+attitude.data<-read.csv(file = "data/dog_jealousy_attitude_reaction_phase_agg_data.csv")%>%
+  mutate(treatment=fct_recode(treatment, "Vet Check"="M", "Greeting"="P"), attitude=as.factor(attitude))
+
+attitude.data$attitude=factor(attitude.data$attitude,
+levels=levels(attitude.data$attitude)[c(1, 4, 2, 3, 5)])
+levels(attitude.data$attitude)
+
+attitude.plot.react<- ggplot(data=attitude.data, aes(x=attitude, y=..prop.., group=1))+
+  geom_histogram(stat="count")+
+  theme_classic()+
+  ylab("Proportion of dogs")+xlab("Attitude")+
+  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())
+
+attitude.plot.react
+
+ggsave(attitude.plot.react, filename = "graphs/attitude_plot_reaction_phase.png", width=6, height=5, scale=0.7)
+```
+
+### relation between behavioral categories and blocking
+
+```{r}
+attitude.data_blocking <- attitude.data%>%
+  select(subject, attitude)%>%
+  full_join(model.data)%>%
+  mutate(blocking.presence = fct_recode(as.factor(blocking.presence), "No Blocking" = "0", "Blocking" = "1"))
+
+attitude.data_blocking$blocking.presence<- relevel(attitude.data_blocking$blocking.presence, ref = "Blocking")
+  
+
+ctab<-table(attitude.data_blocking$attitude, attitude.data_blocking$blocking.presence)
+
+fisher.test(ctab)
+```
+
+
+```{r}
+attitude.plot.react.blocking<-ggplot(attitude.data_blocking) +
+  aes(x = attitude,  fill=as.factor(blocking.presence))+
+  geom_bar() +
+  ylab("Number of dogs")+xlab("Attitude")+
+  scale_fill_brewer(palette="Pastel1")+
+  theme_classic()+
+  theme(legend.title = element_blank(), legend.position = c(0.8, 0.9))
+
+attitude.plot.react.blocking
+
+```
+
+
+
+```{r}
+
+pg<-plot_grid(plot.approach,plot.int, plot.blocking, plot.anal.sniff , plot.fb_humans, attitude.plot.react.blocking, ncol=3, labels = c("A", "B", "C", "D", "E", "F"))
+pg
+#pg.leg<-plot_grid(p.leg, pg, rel_heights = c(0.1, 1), ncol=1)
+#pg.leg
+ggsave(pg, filename = "graphs/jealousy_all_reaction_phase_DVs.pdf", width = 16, height = 11, scale=0.6)
+
+```
+

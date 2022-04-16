@@ -9,6 +9,7 @@
   fake_dog_interaction_behavioral_ratings_markdown.rmd: R script of the ordinal regressions and plots of the behavioral ratings in the different experimental phases.
 ├──  graphics      <-- Data plots.
 ├──  data          <-- Data files.
+                      data_legend.xlsx: description of the variables in the data files.
                       dog_jealousy_aggregated_data.csv: : behavioral data in the reaction phases.
                       dog_jealousy_attitude_agg_data.csv: data of the behavioral ratings in the introduction and interaction phases.
                       dog_jealousy_attitude_reaction_phase_agg_data.csv: data of the behavioral ratings in the reaction phase.

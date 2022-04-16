@@ -1,0 +1,206 @@
+---
+title: "Dog Jealousy- Attitude Analysis Script"
+author: "CV"
+date: "October 27, 2020"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+
+knitr::opts_chunk$set(echo = TRUE)
+
+rm(list=ls())
+library(lme4)
+library(ggthemes)
+library(psych)
+library(cowplot)
+library(car)
+library(ggsignif)
+library(ordinal)
+library(tidyverse)
+library(summarytools)
+library(readxl)
+source("./functions/diagnostic_fcns.r")
+source("./functions/glmm_stability.r")
+source("./functions/boot_glmm.r")
+source("./functions/drop1_para.r")
+
+```
+
+
+## Intro vs interaction phase
+
+```{r loading data, include = FALSE}
+
+ydata <- read.csv(file = "data/dog_jealousy_attitude_agg_data.csv")
+
+ydata$attitude <- as.factor(ydata$attitude)
+#Bring the categories in the correct order
+ydata$attitude=factor(ydata$attitude,
+levels=levels(ydata$attitude)[c(1, 4, 2, 3, 5)])
+levels(ydata$attitude)
+
+ydata$phase<-relevel(as.factor(ydata$phase), ref = "Introduction")
+view(dfSummary(ydata))
+
+
+```
+
+### Ordinal regression
+```{r}
+attitude.model.int.01<-clmm(attitude~phase*treatment*human+z.age+Sex+ (1+phase|subject), data=ydata)
+summary(attitude.model.int.01)
+drop1(attitude.model.int.01, test="Chisq")
+```
+
+
+```{r}
+
+attitude.model.int.02<-clmm(attitude~phase+treatment+human+phase:treatment+phase:human+treatment:human+z.age+Sex+ (1+phase|subject), data=ydata)
+summary(attitude.model.int.02)
+drop1(attitude.model.int.02, test="Chisq")
+```
+```{r}
+
+attitude.model.int.03<-clmm(attitude~phase+treatment*human+Sex+z.age+ (1+phase|subject), data=ydata)
+
+summary(attitude.model.int.03)
+
+am3.drop1<-drop1(attitude.model.int.03, test="Chisq")
+am3.drop1
+```
+```{r}
+
+attitude.null.model<-clmm(attitude~Sex+z.age+ (1+phase|subject), data=ydata)
+
+# comparison
+anova(attitude.null.model, attitude.model.int.03, test="Chisq")
+```
+
+```{r fig.width=8, fig.height=4}
+plot.data<-ydata%>%
+  mutate(treatment=fct_recode(treatment, "Vet Check"="M", "Greeting"="P"))
+
+attitude.plot<- ggplot(data=plot.data, aes(x=attitude, y=..prop.., group=1))+ 
+  geom_bar(stat="count")+
+  facet_grid(human~treatment)+
+  theme_bw()+
+  ylab("Proportion of dogs")+xlab("Attitude")+
+  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),  axis.text=element_text(size=12),  axis.title=element_text(size=14), strip.text.x = element_text(size = 14), strip.text.y = element_text(size = 14))
+
+attitude.plot
+
+ggsave(attitude.plot, filename = "graphs/attitude_plot_humen treatment_interaction.png", width=9, height=5, scale=0.7)
+```
+
+```{r}
+age.plot.data<-ydata%>%
+  group_by(attitude, age)%>%
+  add_count(as.numeric(attitude))
+
+age.plot<-ggplot(data=age.plot.data, aes(x=age, as.numeric(attitude)))+
+  geom_point(size=age.plot.data$n, alpha=.3)+
+  theme_few()+
+  scale_y_continuous(breaks=c(1,2,3,4,5), labels=c("Friendly","Neutral",  "Insecure", "Insecure-Offensive", "Offensive"), limits=c(1, 5))+
+  ylab("")+ xlab("Age (in months)")
+
+age.plot
+ggsave(age.plot, filename = "graphs/attitude_plot_age.pdf", width=7, height=5, scale = 0.8)
+
+```
+
+```{r}
+phase.plot.data<-ydata%>%
+  group_by(subject) %>% 
+  mutate(phase_id = paste(phase, collapse = ","), 
+         attitude_id = paste(attitude, collapse = ",")) %>% 
+  group_by(phase_id, attitude_id) %>% 
+  mutate(width = n())%>%
+  ungroup()%>%
+  group_by(phase)%>%
+  add_count(as.numeric(attitude))
+
+
+phase.plot<-ggplot(data=phase.plot.data, aes(x=phase, as.numeric(attitude)))+
+  geom_line(aes(x=phase, as.numeric(attitude), group=subject, size=width), lty=1, alpha=0.2, color="grey")+
+    geom_point(size=phase.plot.data$n, alpha=.05)+
+  theme_few()+
+  scale_y_continuous(breaks=c(1,2,3,4,5), labels=c( "Friendly","Neutral", "Insecure", "Insecure-Offensive", "Offensive"), limits=c(1, 5))+
+  ylab("")+ xlab("Phase")+ theme(legend.position = "none", axis.text=element_text(size=12),  axis.title=element_text(size=14))
+
+phase.plot
+ggsave(phase.plot, filename = "graphs/attitude_plot_phase.png", width=5, height=7, scale = 1.1)
+
+```
+
+```{r}
+pg<-plot_grid(phase.plot, attitude.plot, nrow=1, labels = c("A", "B"), rel_widths = c(1, 1.5))
+
+ggsave(pg, filename = "graphs/attitude_interaction.pdf", width=16, height=7, scale=0.8)
+```
+
+
+## Reaction phase
+
+```{r  include = FALSE}
+
+zdata<-read.csv(file = "data/dog_jealousy_attitude_reaction_phase_agg_data.csv")
+
+zdata$attitude <- as.factor(zdata$attitude)
+#Bring the categories in the correct order
+zdata$attitude=factor(zdata$attitude,
+levels=levels(zdata$attitude)[c(1,4, 2, 3, 5)])
+levels(zdata$attitude)
+
+```
+
+``` {r mixed modeling, error=TRUE}
+view(dfSummary(zdata))
+```
+### Ordinal regression
+
+fit model
+```{r}
+attitude.model.react.01<-clm(attitude~treatment*human+z.age+Sex, data=zdata)
+summary(attitude.model.react.01)
+drop1(attitude.model.react.01, test="Chisq")
+```
+
+
+```{r}
+
+attitude.model.react.02<-clm(attitude~treatment+human+z.age+Sex, data=zdata)
+summary(attitude.model.react.02)
+drop1(attitude.model.react.02, test="Chisq")
+
+
+```
+### Full-null model comparison
+```{r}
+
+attitude.null.model.react<-clm(attitude~z.age+Sex, data=zdata)
+
+# comparison
+anova(attitude.null.model.react, attitude.model.react.02, test="Chisq")
+```
+
+
+```{r fig.width=5, fig.height=4}
+plot.data2<-zdata%>%
+  mutate(treatment=fct_recode(treatment, "Vet Check"="M", "Greeting"="P"))
+
+attitude.plot.react<- ggplot(data=plot.data2, aes(x=attitude, y=..prop.., group=1))+
+  geom_histogram(stat="count")+
+  #facet_grid(~treatment)+
+  theme_bw()+
+  ylab("Proportion of dogs")+xlab("Attitude")+
+  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())
+
+attitude.plot.react
+
+ggsave(attitude.plot.react, filename = "graphs/attitude_plot_reaction_phase.png", width=6, height=5, scale=0.7)
+```
+
+
